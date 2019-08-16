@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+		<title>SIAKNG</title>
+	</head>
+	<body>
+		<div class="jumbotron jumbotron-fluid" style="background-color: #F5F5DC">
+			<div class="container">
+				<h1 class="display-4">
+					<img src="assets/image/logo.png" width="125px">
+					<strong>SIAK<em style="color: #B8860B">NG</em></strong>
+				</h1>
+			</div>
+		</div>
+		<div class="container">
+			<h6 id="title"></h6>
+			<div id="nilai">
+				<table id="tbl_nilai" class="table">
+					<thead>
+						<tr>
+							<th>No.</th>
+							<th>Kode MK</th>
+							<th>Nama MK</th>
+							<th>Kelas</th>
+							<th>SKS</th>
+							<th>N. Akhir</th>
+							<th>N. Huruf</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		
+			<hr class="my-4">
+			
+			<div class="text-center">
+				<h5>&copy; Universitas Indomie</h5>
+			</div>
+		</div>
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+		<script>
+			function shuffleArr(array){
+				var currentIndex = array.length, temporaryValue, randomIndex;
+
+				// While there remain elements to shuffle...
+				while (0 !== currentIndex){			
+					// Pick a remaining element...
+					randomIndex = Math.floor(Math.random() * currentIndex);
+					currentIndex -= 1;
+
+					// And swap it with the current element.
+					temporaryValue = array[currentIndex];
+					array[currentIndex] = array[randomIndex];
+					array[randomIndex] = temporaryValue;
+				}
+				
+				return array;
+			}
+			
+			function getRandNum(n){
+				var ret = "";
+				for(let i = 0; i < n; i++){
+					ret += Math.floor(Math.random() * 10).toString();
+				}
+				return ret;
+			}
+
+			function getName(){
+				var url = window.location.href;
+				var usr = url.replace(/.*usr\=/gi, "");
+				var name = "Mahasiswa Baru " + usr.replace("mahasiswa_baru","");
+				return name;
+			}
+			
+			function getClass(s){
+				var ret = "";
+				for(let dum in s){
+					var x = s[dum].charCodeAt(0);
+					if((65 <= x && x <= 90) || (48 <= x && x <= 57)){
+						ret += s[dum];
+					}
+				}
+				ret += "-" + getRandNum(1);
+				return ret;
+			}
+
+			function getMKObj(mk){
+				var prefKode = ["STUV", "KLMN", "OPQR", "EFGH", "ABCD"];
+				var sks = [3, 4, 6];
+				var ret = []
+				for(let i = 0; i < mk.length; i++){
+					var idKode = Math.floor(Math.random() * 10) % 5;
+					var idSks = Math.floor(Math.random() * 10) % 3;
+
+					ret[i] = new Object();
+					ret[i].kode = prefKode[idKode] + getRandNum(6);
+					ret[i].nama = mk[i];
+					ret[i].kelas = getClass(mk[i]);
+					ret[i].sks = sks[idSks];
+				}
+
+				return ret;
+			}
+
+			function fillTable(mkObj, score){
+				var nilaiAngka = {"A": "4.0", "A-": "3.7", "B+": "3.3", "B": "3.0", "B-": "2.7", "C+":"2.3", "C": "2.0", "D":"1.0", "E":"0.0"};
+				score = shuffleArr(score);
+
+				var table = document.getElementById("tbl_nilai");
+				for(let i = 0; i < mkObj.length; i++){
+					var row = table.insertRow(i + 1);
+					
+					var cellNo = row.insertCell(0);
+					var cellKode = row.insertCell(1);
+					var cellNama = row.insertCell(2);
+					var cellKelas = row.insertCell(3);
+					var cellSks = row.insertCell(4);
+					var cellAngka = row.insertCell(5);
+					var cellHuruf = row.insertCell(6);
+
+					cellNo.innerHTML = i + 1;
+					cellKode.innerHTML = mkObj[i].kode;
+					cellNama.innerHTML = mkObj[i].nama;
+					cellKelas.innerHTML = mkObj[i].kelas;
+					cellSks.innerHTML = mkObj[i].sks;
+					cellHuruf.innerHTML = score[i];
+					cellAngka.innerHTML = nilaiAngka[score[i]];
+				}
+			}
+
+			var matkul = ["MPKT Z", "Dasar Dasar Rebahan 1", "Pengantar Ilmu Melamun", "Pengantar Rebahan Abstrak", "MPK Bahasa Kalbu", "MPK Seni Santet"];
+			var matkulObj = getMKObj(matkul);
+			var score = ["A", "A", "A-", "A", "A", "A"];
+			
+			document.getElementById("title").innerHTML = "Riwayat Akademis Mahasiswa - " + getName() + " (1906" + getRandNum(6) + ")";
+			fillTable(matkulObj, score);
+		</script>
+	</body>
+</html>
